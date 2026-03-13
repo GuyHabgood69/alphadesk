@@ -10,10 +10,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build-time env vars (Railway injects these)
-ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-
 RUN npm run build
 
 # ── Stage 3: Production ───────────────────────────────────────────────
@@ -22,6 +18,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
+
+# BACKEND_URL is set at runtime via Railway env vars
+# The API route handler reads this to proxy requests
 
 # Copy standalone output
 COPY --from=builder /app/.next/standalone ./

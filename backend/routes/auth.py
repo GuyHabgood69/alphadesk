@@ -78,13 +78,15 @@ async def login(body: LoginRequest, response: Response):
 
     token = _create_token(body.username)
 
-    # Set httpOnly cookie (secure in production, lax for dev)
+    # Set httpOnly cookie
+    # samesite="none" required in production (frontend & backend on different origins)
+    # samesite="lax" for local dev (same localhost origin)
     response.set_cookie(
         key="alphadesk_token",
         value=token,
         httponly=True,
         secure=not settings.debug,
-        samesite="lax",
+        samesite="lax" if settings.debug else "none",
         max_age=_JWT_EXPIRY_SECONDS,
         path="/",
     )

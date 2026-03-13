@@ -79,14 +79,13 @@ async def login(body: LoginRequest, response: Response):
     token = _create_token(body.username)
 
     # Set httpOnly cookie
-    # samesite="none" required in production (frontend & backend on different origins)
-    # samesite="lax" for local dev (same localhost origin)
+    # Cookies are same-origin thanks to Next.js rewrite proxy
     response.set_cookie(
         key="alphadesk_token",
         value=token,
         httponly=True,
         secure=not settings.debug,
-        samesite="lax" if settings.debug else "none",
+        samesite="lax",
         max_age=_JWT_EXPIRY_SECONDS,
         path="/",
     )

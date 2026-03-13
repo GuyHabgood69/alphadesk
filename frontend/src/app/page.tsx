@@ -78,7 +78,7 @@ interface TrackedPosition {
   order_id: string;
 }
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API = "";
 
 // ═══════════════════════════════════════════════════════════════════════
 // DASHBOARD

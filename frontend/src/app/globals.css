@@ -1,0 +1,506 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+/* ══════════════════════════════════════════════════════════════════════
+   AlphaDesk — Premium Fintech Dashboard
+   Inspired by: mint green, lavender purple, deep black, light sage
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Palette ────────────────────────────────────────────────────── */
+  --bg-sage: #dde0d8;
+  --bg-page: #e4e7df;
+  --bg-white: #ffffff;
+  --bg-white-soft: #f5f6f3;
+  --bg-black: #1a1a1a;
+  --bg-black-deep: #111111;
+
+  --mint: #8cf5b4;
+  --mint-soft: #b5f7cf;
+  --mint-bg: #d3fae3;
+  --mint-deep: #5ae892;
+
+  --lavender: #b8a4f0;
+  --lavender-soft: #d4c9f7;
+  --lavender-bg: #ebe5fc;
+  --lavender-deep: #9b82e3;
+
+  --text-black: #111111;
+  --text-dark: #2a2a2a;
+  --text-mid: #6b6b6b;
+  --text-light: #9a9a9a;
+  --text-white: #ffffff;
+  --text-white-dim: rgba(255, 255, 255, 0.6);
+
+  --border-light: rgba(0, 0, 0, 0.06);
+  --border-dark: rgba(255, 255, 255, 0.08);
+
+  --red: #f25c5c;
+  --red-bg: #fde8e8;
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 28px;
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background: var(--bg-sage);
+  color: var(--text-black);
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Noise texture ──────────────────────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   CARDS
+   ══════════════════════════════════════════════════════════════════════ */
+.card-light {
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.25s ease;
+}
+
+.card-light:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+}
+
+.card-dark {
+  background: var(--bg-black);
+  border-radius: var(--radius-lg);
+  color: var(--text-white);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.25s ease;
+}
+
+.card-dark:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-mint {
+  background: var(--mint);
+  border-radius: var(--radius-lg);
+  color: var(--text-black);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.25s ease;
+}
+
+.card-mint:hover {
+  box-shadow: 0 8px 30px rgba(140, 245, 180, 0.25);
+}
+
+.card-lavender {
+  background: var(--lavender);
+  border-radius: var(--radius-lg);
+  color: var(--text-black);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.25s ease;
+}
+
+.card-lavender:hover {
+  box-shadow: 0 8px 30px rgba(184, 164, 240, 0.25);
+}
+
+/* Alias for JSX convenience */
+.card {
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.25s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Icon Circles ───────────────────────────────────────────────────── */
+.icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-circle-light {
+  background: var(--bg-white-soft);
+  border: 1px solid var(--border-light);
+}
+
+.icon-circle-dark {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-dark);
+}
+
+.icon-circle-mint {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.icon-circle-white {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Arrow Link ─────────────────────────────────────────────────────── */
+.arrow-link {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-light);
+  background: var(--bg-white);
+  color: var(--text-mid);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.arrow-link:hover {
+  background: var(--text-black);
+  color: var(--text-white);
+  border-color: transparent;
+}
+
+.arrow-dark {
+  border-color: var(--border-dark);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-white-dim);
+}
+
+.arrow-dark:hover {
+  background: var(--text-white);
+  color: var(--text-black);
+}
+
+/* ── Badges ─────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.badge-buy {
+  background: var(--mint-bg);
+  color: #1a8a4a;
+}
+
+.badge-sell {
+  background: var(--red-bg);
+  color: #c93c3c;
+}
+
+.badge-filled {
+  background: var(--bg-white-soft);
+  color: var(--text-mid);
+  border: 1px solid var(--border-light);
+}
+
+.badge-rejected {
+  background: var(--red-bg);
+  color: #c93c3c;
+}
+
+.badge-pending {
+  background: #fef3cd;
+  color: #8a6d00;
+}
+
+.badge-submitted {
+  background: var(--lavender-bg);
+  color: var(--lavender-deep);
+}
+
+/* ── Table ──────────────────────────────────────────────────────────── */
+.trade-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.trade-table th {
+  text-align: left;
+  padding: 12px 18px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-light);
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 0;
+  background: var(--bg-white);
+  z-index: 1;
+}
+
+.trade-table td {
+  padding: 13px 18px;
+  font-size: 0.82rem;
+  color: var(--text-dark);
+  border-bottom: 1px solid var(--border-light);
+  transition: background 0.15s;
+}
+
+.trade-table tbody tr:hover td {
+  background: var(--bg-white-soft);
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.3s ease;
+}
+
+.btn:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.btn-dark {
+  background: var(--bg-black);
+  color: var(--text-white);
+}
+
+.btn-dark:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-mint {
+  background: var(--mint);
+  color: var(--text-black);
+}
+
+.btn-mint:hover {
+  box-shadow: 0 6px 20px rgba(140, 245, 180, 0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-dark);
+  border: 1.5px solid var(--border-light);
+}
+
+.btn-outline:hover {
+  background: var(--bg-white-soft);
+  border-color: var(--text-light);
+}
+
+/* ── Range Slider ───────────────────────────────────────────────────── */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-black);
+  cursor: pointer;
+  border: 3px solid var(--bg-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-black);
+  cursor: pointer;
+  border: 3px solid var(--bg-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ── Status Dots ────────────────────────────────────────────────────── */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-dot.idle {
+  background: var(--text-light);
+}
+
+.status-dot.scanning,
+.status-dot.analysing,
+.status-dot.executing {
+  background: var(--mint-deep);
+  box-shadow: 0 0 0 3px var(--mint-bg);
+  animation: dot-breathe 2s ease-in-out infinite;
+}
+
+.status-dot.error {
+  background: var(--red);
+  box-shadow: 0 0 0 3px var(--red-bg);
+}
+
+@keyframes dot-breathe {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* ── Animations ─────────────────────────────────────────────────────── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fade-up 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.delay-1 {
+  animation-delay: 0.06s;
+}
+
+.delay-2 {
+  animation-delay: 0.12s;
+}
+
+.delay-3 {
+  animation-delay: 0.18s;
+}
+
+.delay-4 {
+  animation-delay: 0.24s;
+}
+
+.delay-5 {
+  animation-delay: 0.30s;
+}
+
+.delay-6 {
+  animation-delay: 0.36s;
+}
+
+/* ── Focus Rings ────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--lavender);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--lavender);
+  outline-offset: 2px;
+}
+
+/* ── Reduced Motion ────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

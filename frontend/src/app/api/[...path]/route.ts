@@ -3,65 +3,87 @@ import { NextRequest, NextResponse } from "next/server";
 /**
  * Catch-all API proxy — forwards /api/* requests to the backend.
  * Uses server-side BACKEND_URL env var (not NEXT_PUBLIC_*).
- * This runs at runtime so the env var is read when the request comes in.
  */
 const BACKEND = process.env.BACKEND_URL || "http://localhost:8000";
 
+async function proxyRequest(
+  request: NextRequest,
+  context: { params: Promise<{ path: string[] }> }
+) {
+  try {
+    const { path } = await context.params;
+    const pathStr = path.join("/");
+    const url = `${BACKEND}/api/${pathStr}`;
+
+    const headers: Record<string, string> = {};
+
+    // Forward content-type
+    const ct = request.headers.get("content-type");
+    if (ct) headers["content-type"] = ct;
+
+    // Forward cookies so the backend can read the auth token
+    const cookie = request.headers.get("cookie");
+    if (cookie) headers["cookie"] = cookie;
+
+    const init: RequestInit = {
+      method: request.method,
+      headers,
+    };
+
+    // Forward the body for non-GET requests
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      init.body = await request.text();
+    }
+
+    const backendRes = await fetch(url, init);
+
+    // Build the response, forwarding all headers from backend
+    const resHeaders = new Headers();
+    backendRes.headers.forEach((value, key) => {
+      // Forward set-cookie and other headers
+      resHeaders.append(key, value);
+    });
+
+    const body = await backendRes.text();
+
+    return new NextResponse(body, {
+      status: backendRes.status,
+      statusText: backendRes.statusText,
+      headers: resHeaders,
+    });
+  } catch (err) {
+    console.error("[API Proxy Error]", err);
+    return NextResponse.json(
+      { detail: "Proxy error: unable to reach backend" },
+      { status: 502 }
+    );
+  }
+}
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  context: { params: Promise<{ path: string[] }> }
 ) {
-  return proxy(request, await params);
+  return proxyRequest(request, context);
 }
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  context: { params: Promise<{ path: string[] }> }
 ) {
-  return proxy(request, await params);
+  return proxyRequest(request, context);
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  context: { params: Promise<{ path: string[] }> }
 ) {
-  return proxy(request, await params);
+  return proxyRequest(request, context);
 }
 
-async function proxy(
+export async function OPTIONS(
   request: NextRequest,
-  params: { path: string[] }
+  context: { params: Promise<{ path: string[] }> }
 ) {
-  const path = params.path.join("/");
-  const url = `${BACKEND}/api/${path}`;
-
-  const headers = new Headers();
-  headers.set("Content-Type", request.headers.get("Content-Type") || "application/json");
-  // Forward cookies so the backend can read the auth token
-  const cookie = request.headers.get("cookie");
-  if (cookie) headers.set("cookie", cookie);
-
-  const init: RequestInit = {
-    method: request.method,
-    headers,
-  };
-
-  // Forward the body for POST/PUT/PATCH/DELETE
-  if (request.method !== "GET" && request.method !== "HEAD") {
-    init.body = await request.text();
-  }
-
-  const backendRes = await fetch(url, init);
-
-  // Build response and forward Set-Cookie headers from backend
-  const resHeaders = new Headers();
-  backendRes.headers.forEach((value, key) => {
-    resHeaders.append(key, value);
-  });
-
-  return new NextResponse(backendRes.body, {
-    status: backendRes.status,
-    statusText: backendRes.statusText,
-    headers: resHeaders,
-  });
+  return proxyRequest(request, context);
 }
